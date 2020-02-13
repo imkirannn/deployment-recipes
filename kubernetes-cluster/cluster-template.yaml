@@ -15,16 +15,12 @@ spec:
   # Create one etcd member per AZ
   etcdClusters:
   - etcdMembers:
-  {{range $i, $az := .availability_zones.value}}
-    - instanceGroup: master-{{.}}
-      name: {{. | replace $.region.value "" }} {{/* converts eu-west-1a to a */}}
-  {{end}}
+    - instanceGroup: master-{{.region.value}}b
+      name: b {{/* converts eu-west-1a to a */}}
     name: main
   - etcdMembers:
-  {{range $i, $az := .availability_zones.value}}
-    - instanceGroup: master-{{.}}
-      name: {{. | replace $.region.value "" }} {{/* converts eu-west-1a to a */}}
-  {{end}}
+    - instanceGroup: master-{{.region.value}}b
+      name: b {{/* converts eu-west-1a to a */}}
     name: events
   iam:
     allowContainerRegistry: true
@@ -36,6 +32,9 @@ spec:
   networking:
     canal: {}
   nonMasqueradeCIDR: 100.64.0.0/10
+  sshAccess:
+  - 0.0.0.0/0
+  sshKeyname: terraform-demo
   subnets:
   # Public (utility) subnets, one per AZ
   {{range $i, $id := .public_subnet_ids.value}}
@@ -45,28 +44,27 @@ spec:
     zone: {{index $.availability_zones.value $i}}
   {{end}}
   # Private subnets, one per AZ
-  {{range $i, $id := .public_subnet_ids.value}}
+  {{range $i, $id := .private_subnet_ids.value}}
   - id: {{.}}
     name: {{index $.availability_zones.value $i}}
     type: Private
     zone: {{index $.availability_zones.value $i}}
-    egress: {{index $.nat_gateway_ids.value $i}}
+    egress: {{index $.nat_gateway_ids.value 0}}
   {{end}}
   topology:
     dns:
       type: Public
-    masters: private
-    nodes: private
+    masters: public
+    nodes: public
 ---
 
 # Create one master per AZ
-{{range .availability_zones.value}}
 apiVersion: kops/v1alpha2
 kind: InstanceGroup
 metadata:
   labels:
     kops.k8s.io/cluster: {{$.kubernetes_cluster_name.value}}
-  name: master-{{.}}
+  name: master-{{$.region.value}}b
 spec:
   image: kope.io/k8s-1.10-debian-stretch-amd64-hvm-ebs-2018-08-17
   kubernetesVersion: 1.10.6
@@ -75,9 +73,8 @@ spec:
   minSize: 1
   role: Master
   subnets:
-  - {{.}}
+  - {{ $.region.value }}b
 ---
-  {{end}}
 
 apiVersion: kops/v1alpha2
 kind: InstanceGroup
