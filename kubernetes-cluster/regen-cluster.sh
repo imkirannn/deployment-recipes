@@ -3,6 +3,8 @@
 set -e -o pipefail
 rm -f kubernetes.tf versions.tf
 export KOPS_RUN_OBSOLETE_VERSION=true
+ROOT_PATH=/home/ubuntu/deployment-recipes
+cd ${ROOT_PATH}/kubernetes-cluster
 cd ../terraform && terraform init -backend-config=aws-backend.config
 cd -
 TF_OUTPUT=$(cd ../terraform && terraform output -json)
@@ -17,6 +19,7 @@ kops create secret --name ${CLUSTER_NAME} sshpublickey admin -i terraform-demo.p
 
 kops update cluster --target terraform --state ${STATE} --name ${CLUSTER_NAME} --out .
 # kubernetes.tf file  created after kops update cluster  with asg ,elb resources
+terraform init
 terraform 0.12upgrade -yes
-terraform init && terraform plan
+terraform plan
 terraform apply -auto-approve

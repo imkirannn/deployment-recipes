@@ -47,7 +47,7 @@ resource "aws_key_pair" "terraform-demo" {
   public_key = "${file("terraform-demo.pub")}"
 }
 locals {
-    my_office_ip = "182.75.83.2/32"
+    my_office_ip = "0.0.0.0/0"
 }
 resource "aws_security_group" "allow_ssh" {
 	name = "allow_all"
