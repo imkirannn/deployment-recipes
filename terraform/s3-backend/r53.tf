@@ -15,9 +15,9 @@ resource "aws_route53_record" "example" {
     "${aws_route53_zone.example.name_servers.2}",
     "${aws_route53_zone.example.name_servers.3}",
     */
-    "ns-1529.awsdns-63.org",
-	"ns-1844.awsdns-38.co.uk",
-	"ns-251.awsdns-31.com",
-	"ns-617.awsdns-13.net",
+    "ns-1066.awsdns-05.org",
+	"ns-1555.awsdns-02.co.uk",
+	"ns-280.awsdns-35.com",
+	"ns-764.awsdns-31.net",
   ]
 }

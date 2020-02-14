@@ -1,6 +1,6 @@
 provider "aws" {
   region                  = "eu-west-2"
-  shared_credentials_file = "/opt/mywork/Terraform/.aws/credentials"
+  shared_credentials_file = "/opt/mywork/Terraform/.aws/credentials1"
   profile                 = "default"
 }
 module "dev_vpc" {
@@ -8,31 +8,26 @@ module "dev_vpc" {
  create_vpc = false
 }
 
-data "template_file" "script1" {
-   template = "${file("setup_env.sh")}"
-}
 
-data "template_file" "script2" {
-   template = "${file("setup_cluster.sh")}"
-}
-
+/*
 data "template_cloudinit_config" "config" {
    gzip = false
    base64_encode = true
 
    part {
-     filename = "setup_env.sh"
-     content_type = "text/part-handler"
-     content = "${data.template_file.script1.rendered}"
+#     filename = "setup_env.sh"
+      content_type = "text/x-shellscript"
+#    content = "${data.template_file.script1.rendered}"
+     content = "${file("setup_env.sh")}"
   }
 
   part {
-    filename = "setup_cluster.sh"
-    content_type = "text/part-handler"
-    content = "${data.template_file.script2.rendered}"
+    #filename = "setup_cluster.sh"
+    content_type = "text/x-shellscript"
+    content = "${file("setup_cluster.sh")}"
   }
 }
-
+*/
 
 
 data "aws_ami" "ubuntu" {
@@ -86,9 +81,10 @@ resource "aws_instance" "web" {
 //	subnet_id = aws_subnet.outputs.public_subnets
        // subnet_id = module.dev_vpc.public_subnets[0]
 	iam_instance_profile = "${aws_iam_instance_profile.test_profile.name}"
+	
 	key_name = "${aws_key_pair.terraform-demo.key_name}"
-	//user_data = "${file("setup_env.sh")}"
-        user_data     = "${data.template_cloudinit_config.config.rendered}"
+	user_data = "${file("setup_env.sh")}"
+       // user_data     = "${data.template_cloudinit_config.config.rendered}"
 	security_groups = [ "${aws_security_group.allow_ssh.name}" ]
 	tags = {
 		Name = "my-test-server-${count.index}"
@@ -97,6 +93,7 @@ resource "aws_instance" "web" {
     		inline = [
 			"touch a.txt",
         		"git clone https://github.com/imkirannn/deployment-recipes.git",
+			"cd ~/deployment-recipes/kubernetes-cluster && ~/deployment-recipes/kubernetes-cluster/regen-cluster.sh"
                 ]	
 	}
 	connection {
@@ -106,5 +103,5 @@ resource "aws_instance" "web" {
 		 password = ""
 	    	 private_key = "${file("terraform-demo")}"
   	}
-	depends_on = [aws_iam_role_policy.test_policy]
+//	depends_on = [aws_iam_role_policy.test_policy]
 }

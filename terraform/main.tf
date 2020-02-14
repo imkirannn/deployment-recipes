@@ -16,7 +16,7 @@ locals {
   kops_state_bucket_name = "${local.environment}-kops-state-blog"
 
   # Needs to be a FQDN
-  kubernetes_cluster_name = "k8s-dev0.rrproject.club"
+  kubernetes_cluster_name = "k8s-dev.cloudhands.online"
   ingress_ips             = ["10.0.0.100/32", "10.0.0.101/32"]
   vpc_name                = "${local.environment}-vpc"
 

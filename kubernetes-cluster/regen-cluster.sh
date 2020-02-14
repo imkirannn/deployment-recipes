@@ -2,9 +2,9 @@
 
 set -e -o pipefail
 rm -f kubernetes.tf versions.tf
-export AWS_ACCESS_KEY_ID=AKIA3F7INQVYJHAKKVAW; export AWS_SECRET_ACCESS_KEY=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; 
 export KOPS_RUN_OBSOLETE_VERSION=true
-cd ../terraform && terraform init -backend-config=aws-backed-config
+cd ../terraform && terraform init -backend-config=aws-backend.config
+cd -
 TF_OUTPUT=$(cd ../terraform && terraform output -json)
 CLUSTER_NAME="$(echo ${TF_OUTPUT} | jq -r .kubernetes_cluster_name.value)"
 STATE="s3://$(echo ${TF_OUTPUT} | jq -r .kops_s3_bucket.value)"

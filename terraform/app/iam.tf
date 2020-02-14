@@ -36,14 +36,7 @@ resource "aws_iam_role_policy" "test_policy" {
         {
             "Effect": "Allow",
             "Action": [
-            	"ec2:*",
-            	"elasticloadbalancing:*",
-            	"cloudwatch:*",
-            	"autoscaling:*",
-            	"iam:CreateServiceLinkedRole",
-            	"s3:*",
-                "route53:CreateHostedZone",
-                "route53domains:*"
+            	"*"
             ],
             "Resource": [
                 "*"

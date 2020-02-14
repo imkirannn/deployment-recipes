@@ -1,5 +1,5 @@
 locals {
-kubernetes_cluster_name = "k8s-dev.rrproject.club"
+kubernetes_cluster_name = "k8s-dev.cloudhands.online"
 }
 provider "aws" {
   region = "eu-west-2"
