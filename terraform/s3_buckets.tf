@@ -6,15 +6,16 @@ resource "aws_s3_bucket" "kops_state" {
   tags          = merge(local.tags)
   region	= "eu-west-2"
 }
-//resource "aws_route53_zone" "private" {
-//  name = local.kubernetes_cluster_name
+/*
+resource "aws_route53_zone" "private" {
+  name = local.kubernetes_cluster_name
 
-//  vpc {
-//    vpc_id = module.dev_vpc.vpc_id
-//  }
+  vpc {
+    vpc_id = module.dev_vpc.vpc_id
+  }
 
-//}
-
+}
+*/
 /* resource "aws_route53_zone" "main" {
   name = local.kubernetes_cluster_name
 } */
