@@ -34,11 +34,12 @@ resource "aws_instance" "web" {
 	tags = {
 		Name = "my-test-server-${count.index}"
 	}
+//	disable_api_termination = "true"
 	provisioner "remote-exec" {
     		inline = [
 			"touch a.txt",
         		"git clone https://github.com/imkirannn/deployment-recipes.git",
-			"sleep 10",
+			"sleep 200",
 			"cd ~/deployment-recipes/kubernetes-cluster && ~/deployment-recipes/kubernetes-cluster/regen-cluster.sh"
                 ]	
 	}
