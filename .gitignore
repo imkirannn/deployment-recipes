@@ -3,7 +3,6 @@
 .terraform
 terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
-kubernetes-cluster/cluster.yaml
 kubernetes-cluster/terraform.tfstate
 kubernetes-cluster/terraform.tfstate.backup
 kubernetes-cluster/data
