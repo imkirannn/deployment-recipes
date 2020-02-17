@@ -10,10 +10,14 @@ data "aws_ami" "ubuntu" {
 	}
 	owners = ["099720109477"]
 }
+
+
 resource "aws_key_pair" "terraform-demo" {
   key_name   = "terraform-demo"
-  public_key = "${file("terraform-demo.pub")}"
+  public_key = "${file("${path.module}/terraform-demo.pub")}"
 }
+
+
 resource "aws_instance" "web" {
 	ami = "${data.aws_ami.ubuntu.id}"
 	instance_type = "t2.micro"
@@ -48,7 +52,7 @@ resource "aws_instance" "web" {
    		 type     = "ssh"
 		 user     = "ubuntu"
 		 password = ""
-	    	 private_key = "${file("terraform-demo")}"
+	    	 private_key = "${file("${path.module}/terraform-demo")}"
   	}
 //	depends_on = [aws_iam_role_policy.test_policy]
 }

@@ -20,6 +20,7 @@ locals {
   kubernetes_cluster_name = "k8s-dev.cloudhands.online"
   ingress_ips             = ["10.0.0.100/32", "10.0.0.101/32"]
   vpc_name                = "${local.environment}-vpc"
+  repository_name 	  = "cloudhands/demo-app"
 
   tags = {
     environment = local.environment
