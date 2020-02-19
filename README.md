@@ -28,7 +28,7 @@ cd $ROOT_PATH/kops-tf/
 
 login to baiston host with private key and export kubeconfig with cluster name
 
-let’s say  
+let’s say: 
 
 kops state bucket: dev-kops-state-blog
 
