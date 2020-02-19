@@ -1,14 +1,14 @@
 locals {
-kubernetes_cluster_name = "k8s-dev.cloudhands.online"
+kubernetes_cluster_name = "test.cloudhands.online"
 }
 provider "aws" {
   region = "eu-west-2"
-  shared_credentials_file = "/opt/mywork/Terraform/.aws/credentials"
+  #shared_credentials_file = "/opt/mywork/Terraform/.aws/credentials"
   profile                 = "default"
   
 }
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "tf-state-kops-blog"
+  bucket = "tf-state-kops-blog-1"
  # key    = "dev"
   force_destroy = true
   # Enable versioning so we can see the full revision history of our

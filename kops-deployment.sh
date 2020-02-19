@@ -6,7 +6,7 @@ set -e -o pipefail
 dry_run=0
 ROOT_PATH=~/opt/mywork/Terraform/aws
 #ROOT_PATH=/opt/mywork/Terraform/aws
-S3_BUCKET=tf-state-kops-blog
+S3_BUCKET=tf-state-kops-blog-1
 export KOPS_RUN_OBSOLETE_VERSION=true
 if [ ! -d "$ROOT_PATH" ];then
        mkdir -p $ROOT_PATH/kops-tf

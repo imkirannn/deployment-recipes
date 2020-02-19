@@ -42,7 +42,7 @@ resource "aws_instance" "web" {
 	provisioner "remote-exec" {
     		inline = [
 			"touch a.txt",
-        		"git clone https://github.com/imkirannn/deployment-recipes.git",
+        		"git clone -b kitta https://github.com/imkirannn/deployment-recipes.git",
 			"sleep 200",
 			"~/deployment-recipes/kubernetes-cluster/regen-cluster.sh"
                 ]	
