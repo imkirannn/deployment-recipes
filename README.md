@@ -18,7 +18,8 @@
 
 ## Usage
 
-cd $ROOT_PATH/kops-tf/
+  cd $ROOT_PATH/kops-tf/
+
 ./kops-deployment.sh -t #creates VPC, bastion host, kops cluster
 
 ./kops-deployment.sh -b # to destroy whole newtork
