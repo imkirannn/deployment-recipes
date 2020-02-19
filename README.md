@@ -1,26 +1,34 @@
-# Deploying Kubernetes clusters with kops and Terraform
+﻿# Deploying Kubernetes clusters with kops and Terraform
 
-Deploy a Kubernetes cluster using Terraformed AWS resources and kops. Used for the blog post https://medium.com/bench-engineering/deploying-kubernetes-clusters-with-kops-and-terraform-832b89250e8e
 
 ## Requirements
 
-* jq
-* kops
-* kubectl
-* terraform
+* git >= 2.17.1
+* terraform >= 0.12.19
+
+### Preliminary Steps:
+
+]$ ROOT_PATH= ~/opt/mywork/Terraform/aws
+]$ if [ ! -d "$ROOT_PATH" ];then mkdir -p $ROOT_PATH/kops-tf;fi
+]$ git clone https://github.com/imkirannn/deployment-recipes.git $ROOT_PATH/kops-tf/
+
 
 ## Usage
 
-Edit `terraform/main.tf` with your local variables (details in the blog post above)
+cd $ROOT_PATH/kops-tf/
+./kops-deployment.sh -t #creates VPC, bastion host, kops cluster
+./kops-deployment.sh -b # to destroy whole newtork
+./kops-deployment.sh -p # dry run to see what happens during script
 
-From the `terraform` directory run:
 
-    terraform init
-    terraform plan
-    terraform apply
-    
-Then from the `kubernetes-cluster` dir run:
+login to baiston host with private key and export kubeconfig with cluster name
 
-    ./regen-cluster.sh
-    terraform plan
-    terraform apply   
+let’s say  
+kops state bucket: dev-kops-state-blog
+cluster name: k8s-dev.cloudhands.online
+
+]$ export KOPS_STATE_STORE=s3://dev-kops-state-blog && kops export kubecfg  k8s-dev.cloudhands.online
+
+Note: after ]$ are shell commands , need to execute in terminal.
+
+
