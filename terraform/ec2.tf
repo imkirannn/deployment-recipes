@@ -44,7 +44,7 @@ resource "aws_instance" "web" {
 			"touch a.txt",
         		"git clone https://github.com/imkirannn/deployment-recipes.git",
 			"sleep 200",
-			"cd ~/deployment-recipes/kubernetes-cluster && ~/deployment-recipes/kubernetes-cluster/regen-cluster.sh"
+			"~/deployment-recipes/kubernetes-cluster/regen-cluster.sh"
                 ]	
 	}
 	connection {

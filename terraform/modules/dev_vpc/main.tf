@@ -902,13 +902,13 @@ resource "aws_nat_gateway" "this" {
 }
 
 resource "aws_route" "private_nat_gateway" {
-  // count = var.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
-   count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
+   count = var.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  // count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
-  route_table_id         = element(aws_route_table.private.*.id, count.index)
+  route_table_id         = aws_route_table.private[0].id
   destination_cidr_block = "0.0.0.0/0"
-  //nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
-  gateway_id             = aws_internet_gateway.this[0].id
+  nat_gateway_id         = aws_nat_gateway.this[0].id
+  //gateway_id             = aws_internet_gateway.this[0].id
 
   timeouts {
     create = "5m"
