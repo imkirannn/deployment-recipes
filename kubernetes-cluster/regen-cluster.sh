@@ -3,11 +3,12 @@
 set -e -o pipefail
 rm -f kubernetes.tf versions.tf
 export KOPS_RUN_OBSOLETE_VERSION=true
-ROOT_PATH=/home/ubuntu/deployment-recipes
-cd ${ROOT_PATH}/kubernetes-cluster
-cd ../terraform && terraform init -backend-config=aws-backend.config
-cd -
-TF_OUTPUT=$(cd ../terraform && terraform output -json)
+ROOT_PATH1=/home/ubuntu/deployment-recipes
+cd ${ROOT_PATH1}/kubernetes-cluster
+cd ../terraform  
+terraform init -backend-config=aws-backend.config
+TF_OUTPUT=$(terraform output -json)
+cd -   
 echo $TF_OUTPUT
 CLUSTER_NAME="$(echo ${TF_OUTPUT} | jq -r .kubernetes_cluster_name.value)"
 echo "cluster name: $CLUSTER_NAME"
