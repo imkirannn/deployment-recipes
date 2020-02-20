@@ -6,8 +6,22 @@ set -e -o pipefail
 dry_run=0
 #ROOT_PATH=~/opt/mywork/Terraform/aws
 ROOT_PATH=/opt/mywork/Terraform/aws
-S3_BUCKET=tf-state-kops-blog
+
+echo "What's your S3 bucket name for Terraform backend state:::"
+echo " "
+read S3_BUCKET
+echo ""
+echo "What's your KOPS domain name, created in ROUTE53:::"
+echo ""
+read cluster_name
+echo ""
+sed -i "s/\(bucket = \).*\$/\1${S3_BUCKET}/" terraform/aws-backend.config
+sed -i "s/\(bucket = \).*\$/\1${s3_bucket}/" terraform/s3-backend/s3.tf
+
+sed -i "s/\(kubernetes_cluster_name = \).*\$/\1${cluster_name}/" terraform/s3-backend/s3.tf 
+sed -i "s/\(kubernetes_cluster_name = \).*\$/\1${cluster_name}/" terraform/main.tf
 export KOPS_RUN_OBSOLETE_VERSION=true
+
 #if [ ! -d "$ROOT_PATH" ];then
 #       mkdir -p $ROOT_PATH/kops-tf
 #fi;

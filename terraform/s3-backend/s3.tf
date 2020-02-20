@@ -8,7 +8,7 @@ provider "aws" {
   
 }
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "tf-state-kops-blog"
+  bucket = tf-state-kops-blog
  # key    = "dev"
   force_destroy = true
   # Enable versioning so we can see the full revision history of our
@@ -18,7 +18,7 @@ resource "aws_s3_bucket" "terraform_state" {
   }
 }
 resource "aws_s3_bucket_object" "folder1" {
-    bucket = aws_s3_bucket.terraform_state.id
+    bucket = tf-state-kops-blog
     acl    = "private"
     key    = "dev/"
     source = "/dev/null"
