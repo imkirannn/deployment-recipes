@@ -4,22 +4,28 @@
 ###		   Access to deployment-recipes github	
 set -e -o pipefail
 dry_run=0
-#ROOT_PATH=~/opt/mywork/Terraform/aws
-ROOT_PATH=/opt/mywork/Terraform/aws
+ROOT_PATH=~/opt/mywork/Terraform/aws
+#ROOT_PATH=/opt/mywork/Terraform/aws
 
-echo "What's your S3 bucket name for Terraform backend state:::"
-echo " "
-read S3_BUCKET
-echo ""
-echo "What's your KOPS domain name, created in ROUTE53:::"
-echo ""
-read cluster_name
-echo ""
-sed -i "s/\(bucket = \).*\$/\1${S3_BUCKET}/" terraform/aws-backend.config
-sed -i "s/\(bucket = \).*\$/\1${s3_bucket}/" terraform/s3-backend/s3.tf
+#echo "What's your S3 bucket name for Terraform backend state:::"
+#echo " "
+#read tf_bucket
+#echo ""
+#echo "What's your KOPS domain name, created in ROUTE53:::"
+#echo ""
+#read cluster_name
+#echo ""
+#echo "$tf_bucket is"
+sed -i "s/d_k8s_cl/${cluster_name}/g" terraform/s3-backend/variables.tf
+sed -i "s/d_s3_bucket/${tf_bucket}/g" terraform/s3-backend/variables.tf
+sed -i "s/d_k8s_cl/${cluster_name}/g" terraform/variables.tf
+sed -i "s/d_s3_bucket/${tf_bucket}/g" terraform/variables.tf
 
-sed -i "s/\(kubernetes_cluster_name = \).*\$/\1${cluster_name}/" terraform/s3-backend/s3.tf 
-sed -i "s/\(kubernetes_cluster_name = \).*\$/\1${cluster_name}/" terraform/main.tf
+#sed -i "s/\(bucket = \).*\$/\1${S3_BUCKET}/" terraform/aws-backend.config
+#sed -i "s/\(bucket = \).*\$/\1${s3_bucket}/" terraform/s3-backend/s3.tf
+
+#sed -i "s/\(kubernetes_cluster_name = \).*\$/\1${cluster_name}/" terraform/s3-backend/s3.tf 
+#sed -i "s/\(kubernetes_cluster_name = \).*\$/\1${cluster_name}/" terraform/main.tf
 export KOPS_RUN_OBSOLETE_VERSION=true
 
 #if [ ! -d "$ROOT_PATH" ];then
@@ -29,14 +35,14 @@ export KOPS_RUN_OBSOLETE_VERSION=true
 
 create_s3_bucket () {
    cd ${ROOT_PATH}/kops-tf/terraform/s3-backend/
-   terraform init && terraform plan 
-   terraform apply -auto-approve
+   terraform init && terraform plan -var="kubernetes_cluster_name=$cluster_name" -var="s3_bucket=$tf_bucket" 
+   terraform apply -auto-approve 
 }	
 
 check_s3_bucket (){
-   if aws s3api head-bucket --bucket "$S3_BUCKET" 2>/dev/null; then 
+   if aws s3api head-bucket --bucket "$tf_bucket" 2>/dev/null; then 
        echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-       echo "S3 bucket $S3_BUCKET exists....";
+       echo "S3 bucket $tf_bucket exists....";
        echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
    else 
        echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
@@ -88,7 +94,7 @@ nw_destroy () {
 ####
 # Main Starts from here
 ####
-while getopts "ptb" opt; do
+while getopts "ptbd" opt; do
     case "$opt" in
         p) dry_run=1 
 		echo "setting dry_run to 1"
@@ -98,6 +104,8 @@ while getopts "ptb" opt; do
 	  # create_bastion
 		;;
 	b) nw_destroy
+		;;
+	d) check_s3_bucket
 		;;
         ?) echo "./$(basename $0) -p for dry run" >&2
 	   echo "./$(basename $0) -t to create everything" >&2

@@ -1,13 +1,13 @@
 terraform {
   backend "s3" {
-   shared_credentials_file = "/opt/mywork/Terraform/.aws/credentials1"
+#   shared_credentials_file = "/opt/mywork/Terraform/.aws/credentials1"
 
   }
 }
 
 provider "aws" {
   region                  = "eu-west-2"
-  shared_credentials_file = "/opt/mywork/Terraform/.aws/credentials1"
+ # shared_credentials_file = "/opt/mywork/Terraform/.aws/credentials1"
   profile                 = "default"
 }
 locals {
@@ -17,7 +17,7 @@ locals {
   my_office_ip	     = "0.0.0.0/0"
 
   # Needs to be a FQDN
-  kubernetes_cluster_name = "k8s-dev.cloudhands.online"
+  kubernetes_cluster_name = "${var.kubernetes_cluster_name}"
  # ingress_ips             = ["10.0.0.100/32", "10.0.0.101/32"]
 #   ingress_ips		 = 
   vpc_name                = "${local.environment}-vpc"
