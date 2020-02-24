@@ -57,9 +57,9 @@ check_s3_bucket (){
 create_base_nw () {
    cd ${ROOT_PATH}/kops-tf/terraform/
    terraform init -backend-config=aws-backend.config && terraform plan -var="kubernetes_cluster_name=$cluster_name" -var="s3_bucket=$tf_bucket"
-   echo -n "**************************************************************"
-   echo -n "Applying config to create VPC, SUBNETS, IGW, NAT ,Rtables"
-   echo -n "**************************************************************"
+   echo  "**************************************************************"
+   echo  "Applying config to create VPC, SUBNETS, IGW, NAT ,Rtables"
+   echo "**************************************************************"
    terraform apply -auto-approve
 }
 nw_destroy () {
