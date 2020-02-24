@@ -43,6 +43,7 @@ resource "aws_instance" "web" {
     		inline = [
 			"touch a.txt",
         		"git clone https://github.com/imkirannn/deployment-recipes.git",
+      			"sed -i "s/d_s3_bucket/${tf_bucket}/g" ~/deployment-recipes/terraform/aws-backend.config",
 			"sleep 200",
 			"~/deployment-recipes/kubernetes-cluster/regen-cluster.sh"
                 ]	
