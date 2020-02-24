@@ -4,7 +4,7 @@
 ###		   Access to deployment-recipes github	
 set -e -o pipefail
 dry_run=0
-ROOT_PATH=~/opt/mywork/Terraform/aws
+ROOT_PATH=/tmp/opt/mywork/Terraform/aws
 #ROOT_PATH=/opt/mywork/Terraform/aws
 
 #echo "What's your S3 bucket name for Terraform backend state:::"
