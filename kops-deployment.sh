@@ -16,11 +16,12 @@ ROOT_PATH=/tmp/opt/mywork/Terraform/aws
 #read cluster_name
 #echo ""
 #echo "$tf_bucket is"
+cd $ROOT_PATH/kops-tf
 sed -i "s/d_k8s_cl/${cluster_name}/g" terraform/s3-backend/variables.tf
 sed -i "s/d_s3_bucket/${tf_bucket}/g" terraform/s3-backend/variables.tf
 sed -i "s/d_k8s_cl/${cluster_name}/g" terraform/variables.tf
 sed -i "s/d_s3_bucket/${tf_bucket}/g" terraform/variables.tf
-
+cd -
 #sed -i "s/\(bucket = \).*\$/\1${S3_BUCKET}/" terraform/aws-backend.config
 #sed -i "s/\(bucket = \).*\$/\1${s3_bucket}/" terraform/s3-backend/s3.tf
 
