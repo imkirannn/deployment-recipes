@@ -70,6 +70,7 @@ nw_destroy () {
   	while [[ "$NUM_TRIES" -lt $NUM_RETRIES && "$UPDATE_SUCCESS" == "false" ]]; do
 		echo "**************************************************************"
         	echo  "Deleting VPC, SUBNETS, IGW, NAT ,Rtables etc................"
+		terraform init -backend-config=aws-backend.config
     		terraform destroy -input=false -auto-approve
     		if [ "$?" -eq 0 ]; then
         	    UPDATE_SUCCESS=true
