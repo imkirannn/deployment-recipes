@@ -8,6 +8,7 @@ cd ${ROOT_PATH1}/kubernetes-cluster
 echo "inside script terraform state bucket name coming as is: ${tf_bucket}"
 cd ../terraform  
 terraform init -backend-config=aws-backend.config
+sleep 20
 TF_OUTPUT=$(terraform output -json)
 echo "NEWPWD is ${PWD}"
 cd -   
