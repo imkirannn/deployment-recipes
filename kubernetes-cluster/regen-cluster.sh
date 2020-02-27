@@ -26,7 +26,7 @@ kops create secret --name ${CLUSTER_NAME} sshpublickey admin -i terraform-demo.p
 
 kops update cluster --target terraform --state ${STATE} --name ${CLUSTER_NAME} --out .
 # kubernetes.tf file  created after kops update cluster  with asg ,elb resources
-terraform 0.12upgrade -yes
 terraform init
+terraform 0.12upgrade -yes
 terraform plan
 terraform apply -auto-approve
