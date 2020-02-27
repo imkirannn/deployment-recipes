@@ -85,9 +85,9 @@ metadata:
 spec:
   image: kope.io/k8s-1.10-debian-stretch-amd64-hvm-ebs-2018-08-17
   kubernetesVersion: 1.10.6
-  machineType: t2.medium
-  maxSize: 2
-  minSize: 1
+  machineType: t2.small
+  maxSize: 4
+  minSize: 3
   role: Node
   subnets:
   {{range .availability_zones.value}}

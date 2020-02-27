@@ -25,6 +25,7 @@ kops replace -f cluster.yaml --state ${STATE} --name ${CLUSTER_NAME} --force
 kops create secret --name ${CLUSTER_NAME} sshpublickey admin -i terraform-demo.pub --state ${STATE}
 
 kops update cluster --target terraform --state ${STATE} --name ${CLUSTER_NAME} --out .
+kops rolling-update cluster ${CLUSTER_NAME} --yes
 # kubernetes.tf file  created after kops update cluster  with asg ,elb resources
 terraform init
 terraform 0.12upgrade -yes
