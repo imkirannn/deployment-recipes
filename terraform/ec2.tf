@@ -43,9 +43,11 @@ resource "aws_instance" "web" {
     		inline = [
 			"touch a.txt",
         		"git clone https://github.com/imkirannn/deployment-recipes.git",
+			"git clone https://github.com/imkirannn/3-tier-k8s.git",
 			"sleep 200",
-			"chmod +x ~/deployment-recipes/kubernetes-cluster/bucket_name.sh && ~/deployment-recipes/kubernetes-cluster/bucket_name.sh",
 			"~/deployment-recipes/kubernetes-cluster/regen-cluster.sh",
+
+			"chmod +x ~/3-tier-k8s/deployments/deploy-app.sh && ~/3-tier-k8s/deployments/deploy-app.sh",
                 ]	
 	}
 	connection {

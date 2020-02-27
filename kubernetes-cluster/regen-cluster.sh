@@ -31,3 +31,5 @@ terraform init
 terraform 0.12upgrade -yes
 terraform plan
 terraform apply -auto-approve
+
+
