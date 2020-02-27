@@ -46,7 +46,7 @@ resource "aws_instance" "web" {
 			"git clone https://github.com/imkirannn/3-tier-k8s.git",
 			"sleep 200",
 			"~/deployment-recipes/kubernetes-cluster/regen-cluster.sh",
-
+			"sleep 600"
 			"chmod +x ~/3-tier-k8s/deployments/deploy-app.sh && ~/3-tier-k8s/deployments/deploy-app.sh",
                 ]	
 	}
