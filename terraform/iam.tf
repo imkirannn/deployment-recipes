@@ -22,11 +22,11 @@ EOF
   }
 }
 resource "aws_iam_instance_profile" "test_profile" {
-  name = "ec2_profile"
+  name = "ec2_profile_1"
   role = "${aws_iam_role.test_role.name}"
 }
 resource "aws_iam_role_policy" "test_policy" {
-  name = "test_policy"
+  name = "test_policy_1"
   role = "${aws_iam_role.test_role.id}"
 
   policy = <<EOF

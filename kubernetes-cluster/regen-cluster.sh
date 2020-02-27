@@ -8,11 +8,9 @@ cd ${ROOT_PATH1}/kubernetes-cluster
 echo "inside script terraform state bucket name coming as is: ${tf_bucket}"
 cd ../terraform  
 terraform init -backend-config=aws-backend.config
-sleep 40
+sleep 140
 TF_OUTPUT=$(terraform output -json)
-echo "NEWPWD is ${PWD}"
 cd -   
-echo "ANTOTHERPWD is ${PWD}"
 echo $TF_OUTPUT
 CLUSTER_NAME="$(echo ${TF_OUTPUT} | jq -r .kubernetes_cluster_name.value)"
 echo "cluster name: $CLUSTER_NAME"
@@ -25,7 +23,7 @@ kops replace -f cluster.yaml --state ${STATE} --name ${CLUSTER_NAME} --force
 kops create secret --name ${CLUSTER_NAME} sshpublickey admin -i terraform-demo.pub --state ${STATE}
 
 kops update cluster --target terraform --state ${STATE} --name ${CLUSTER_NAME} --out .
-kops rolling-update cluster ${CLUSTER_NAME} --yes
+#kops rolling-update cluster ${CLUSTER_NAME} --yes
 # kubernetes.tf file  created after kops update cluster  with asg ,elb resources
 terraform init
 terraform 0.12upgrade -yes

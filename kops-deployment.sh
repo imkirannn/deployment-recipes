@@ -10,10 +10,12 @@ ROOT_PATH=/opt/mywork/Terraform/aws
 echo "What's your S3 bucket name for Terraform backend state:::"
 echo " "
 read tf_bucket
+tf_bucket=${tf_bucket:-tf-state-kops-dump}
 echo ""
 echo "What's your KOPS domain name, created in ROUTE53:::"
 echo ""
 read cluster_name
+cluster_name=${cluster_name:-k8s-dev.cloudhands.online}
 echo ""
 #echo "$tf_bucket is"
 cd $ROOT_PATH/kops-tf
