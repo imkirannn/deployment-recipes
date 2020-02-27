@@ -4,17 +4,17 @@
 ###		   Access to deployment-recipes github	
 set -e -o pipefail
 dry_run=0
-ROOT_PATH=/tmp/opt/mywork/Terraform/aws
-#ROOT_PATH=/opt/mywork/Terraform/aws
+#ROOT_PATH=/tmp/var/mywork/Terraform/aws
+ROOT_PATH=/opt/mywork/Terraform/aws
 
-#echo "What's your S3 bucket name for Terraform backend state:::"
-#echo " "
-#read tf_bucket
-#echo ""
-#echo "What's your KOPS domain name, created in ROUTE53:::"
-#echo ""
-#read cluster_name
-#echo ""
+echo "What's your S3 bucket name for Terraform backend state:::"
+echo " "
+read tf_bucket
+echo ""
+echo "What's your KOPS domain name, created in ROUTE53:::"
+echo ""
+read cluster_name
+echo ""
 #echo "$tf_bucket is"
 cd $ROOT_PATH/kops-tf
 sed -i "s/d_k8s_cl/${cluster_name}/g" terraform/s3-backend/variables.tf

@@ -1,6 +1,9 @@
 terraform {
   backend "s3" {
-#   shared_credentials_file = "/opt/mywork/Terraform/.aws/credentials1"
+  # shared_credentials_file = "/opt/mywork/Terraform/.aws/credentials"
+  #  bucket = "tf-state-tmp"
+  #  key = "dev/terraform.tfstate"
+  #  region = "eu-west-2"
 
   }
 }

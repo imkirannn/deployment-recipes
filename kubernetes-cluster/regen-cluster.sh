@@ -8,7 +8,7 @@ cd ${ROOT_PATH1}/kubernetes-cluster
 echo "inside script terraform state bucket name coming as is: ${tf_bucket}"
 cd ../terraform  
 terraform init -backend-config=aws-backend.config
-sleep 20
+sleep 40
 TF_OUTPUT=$(terraform output -json)
 echo "NEWPWD is ${PWD}"
 cd -   
@@ -26,7 +26,7 @@ kops create secret --name ${CLUSTER_NAME} sshpublickey admin -i terraform-demo.p
 
 kops update cluster --target terraform --state ${STATE} --name ${CLUSTER_NAME} --out .
 # kubernetes.tf file  created after kops update cluster  with asg ,elb resources
-terraform init
 terraform 0.12upgrade -yes
+terraform init
 terraform plan
 terraform apply -auto-approve
