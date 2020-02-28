@@ -8,13 +8,16 @@ cd ${ROOT_PATH1}/kubernetes-cluster
 echo "inside script terraform state bucket name coming as is: ${tf_bucket}"
 cd ../terraform 
 echo "waiting for backend initalisation...."
-sleep 140
+sleep 240
 terraform init -backend-config=aws-backend.config
 TF_OUTPUT=$(terraform output -json)
 cd -   
 echo $TF_OUTPUT
 CLUSTER_NAME="$(echo ${TF_OUTPUT} | jq -r .kubernetes_cluster_name.value)"
 echo "cluster name: $CLUSTER_NAME"
+if [ "$CLUSTER_NAME" == 'null' ];then
+	exit 0
+fi
 STATE="s3://$(echo ${TF_OUTPUT} | jq -r .kops_s3_bucket.value)"
 
 kops toolbox template --name ${CLUSTER_NAME} --values <( echo ${TF_OUTPUT}) --template cluster-template.yaml --format-yaml > cluster.yaml
