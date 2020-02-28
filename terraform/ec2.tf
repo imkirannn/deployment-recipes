@@ -39,24 +39,28 @@ resource "aws_instance" "web" {
 		Name = "my-test-server-${count.index}"
 	}
 //	disable_api_termination = "true"
-	provisioner "remote-exec" {
-    		inline = [
-			"touch a.txt",
-        		"git clone https://github.com/imkirannn/deployment-recipes.git",
-			"git clone https://github.com/imkirannn/3-tier-k8s.git",
-			"sleep 200",
-			"~/deployment-recipes/kubernetes-cluster/regen-cluster.sh",
-			"sleep 600",
-			"chmod +x ~/3-tier-k8s/deployments/deploy-app.sh && ~/3-tier-k8s/deployments/deploy-app.sh",
-                ]	
-	}
-	connection {
-   		 host = "${self.public_ip}"
-   		 type     = "ssh"
-		 user     = "ubuntu"
-		 password = ""
-	    	 private_key = "${file("${path.module}/terraform-demo")}"
-  	}
-//	depends_on = [aws_iam_role_policy.test_policy]
 }
 
+resource "null_resource" "remote-setup" {
+  depends_on = [aws_instance.web]
+  triggers = {
+    instance_id = "${aws_instance.web.instance_id}"
+  }
+  connection {
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("${path.module}/terraform-demo")}"
+    host = "${aws_instance.web.instance_dns}"
+    agent = false
+    timeout = "10s"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "git clone https://github.com/imkirannn/deployment-recipes.git",
+       "git clone https://github.com/imkirannn/3-tier-k8s.git",
+       "~/deployment-recipes/kubernetes-cluster/regen-cluster.sh",
+       "sleep 600",
+       "chmod +x ~/3-tier-k8s/deployments/deploy-app.sh && ~/3-tier-k8s/deployments/deploy-app.sh",
+    ]
+  }
