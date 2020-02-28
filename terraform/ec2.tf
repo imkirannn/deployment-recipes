@@ -40,17 +40,21 @@ resource "aws_instance" "web" {
 	}
 //	disable_api_termination = "true"
 }
+output "public_dns" {
 
+value = "${aws_instance.web[0].public_ip}"
+
+}
 resource "null_resource" "remote-setup" {
   depends_on = [aws_instance.web]
   triggers = {
-    instance_id = "${aws_instance.web.instance_id}"
+    instance_id = "${aws_instance.web[0].id}"
   }
   connection {
     type = "ssh"
     user = "ubuntu"
     private_key = "${file("${path.module}/terraform-demo")}"
-    host = "${aws_instance.web.instance_dns}"
+    host = "${aws_instance.web[0].public_ip}"
     agent = false
     timeout = "10s"
   }
@@ -64,3 +68,4 @@ resource "null_resource" "remote-setup" {
        "chmod +x ~/3-tier-k8s/deployments/deploy-app.sh && ~/3-tier-k8s/deployments/deploy-app.sh",
     ]
   }
+}

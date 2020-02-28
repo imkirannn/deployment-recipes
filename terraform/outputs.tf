@@ -66,3 +66,8 @@ output "kops_s3_bucket" {
 output "kubernetes_cluster_name" {
   value = local.kubernetes_cluster_name
 }
+
+
+//output "aws_instance_public_dns" {
+//  value = aws_instance.web.public_dns
+//}
