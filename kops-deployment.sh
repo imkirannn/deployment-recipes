@@ -67,9 +67,9 @@ create_base_nw () {
 
 regen_cluster (){
 	cd ${ROOT_PATH}/kops-tf/kubernetes-cluster/
-	host_ip=$(cat public_ips.txt)
-	ssh -i terraform-demo ubuntu@$host_ip "bash regen_cluster.sh"
-	rm public_ips.txt
+	host_ip=$(cat ../terraform/public_ips.txt)
+	ssh -i terraform-demo -o StrictHostKeyChecking=no ubuntu@$host_ip "bash regen-cluster.sh"
+	rm ../terraform/public_ips.txt
 }
 nw_destroy () {
 	UPDATE_SUCCESS=false
