@@ -5,8 +5,9 @@ rm -f kubernetes.tf versions.tf
 export KOPS_RUN_OBSOLETE_VERSION=true
 ROOT_PATH1=/home/ubuntu/deployment-recipes
 cd ${ROOT_PATH1}/kubernetes-cluster
-echo "inside script terraform state bucket name coming as is: ${tf_bucket}"
+
 cd ../terraform 
+ls -lrta
 echo "waiting for backend initalisation...."
 sleep 240
 terraform init -backend-config=aws-backend.config
