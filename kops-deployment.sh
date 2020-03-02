@@ -113,7 +113,7 @@ while getopts "ptbd" opt; do
 		;;
 	t) check_s3_bucket
 	   create_base_nw
-	   regen_cluster
+	    regen_cluster
 
 	  # create_bastion
 		;;
