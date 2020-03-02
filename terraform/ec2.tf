@@ -39,33 +39,13 @@ resource "aws_instance" "web" {
 		Name = "my-test-server-${count.index}"
 	}
 //	disable_api_termination = "true"
+	provisioner "local-exec" {
+                 command = "echo ${aws_instance.web[0].public_ip} > public_ips.txt"
+        }
+
 }
 output "public_dns" {
 
 value = "${aws_instance.web[0].public_ip}"
 
-}
-resource "null_resource" "remote-setup" {
-  depends_on = [aws_instance.web]
-  triggers = {
-    instance_id = "${aws_instance.web[0].id}"
-  }
-  connection {
-    type = "ssh"
-    user = "ubuntu"
-    private_key = "${file("${path.module}/terraform-demo")}"
-    host = "${aws_instance.web[0].public_ip}"
-    agent = false
-    timeout = "10s"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sleep 600",
-      "git clone https://github.com/imkirannn/deployment-recipes.git",
-       "git clone https://github.com/imkirannn/3-tier-k8s.git",
-       "~/deployment-recipes/kubernetes-cluster/regen-cluster.sh",
-       "chmod +x ~/3-tier-k8s/deployments/deploy-app.sh && ~/3-tier-k8s/deployments/deploy-app.sh",
-    ]
-  }
 }

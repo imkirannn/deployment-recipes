@@ -64,6 +64,13 @@ create_base_nw () {
    echo "**************************************************************"
    terraform apply -auto-approve
 }
+
+regen_cluster (){
+	cd ${ROOT_PATH}/kops-tf/kubernetes-cluster/
+	host_ip=$(cat public_ips.txt)
+	ssh -i terraform-demo ubuntu@$host_ip "bash regen_cluster.sh"
+	rm public_ips.txt
+}
 nw_destroy () {
 	UPDATE_SUCCESS=false
   	NUM_TRIES=0
@@ -106,6 +113,8 @@ while getopts "ptbd" opt; do
 		;;
 	t) check_s3_bucket
 	   create_base_nw
+	   regen_cluster
+
 	  # create_bastion
 		;;
 	b) nw_destroy
