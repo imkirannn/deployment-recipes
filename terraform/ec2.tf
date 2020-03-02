@@ -42,7 +42,12 @@ resource "aws_instance" "web" {
 	provisioner "local-exec" {
                  command = "echo ${aws_instance.web[0].public_ip} > public_ips.txt"
         }
-
+	provisioner "remote-exec" {
+	    inline = [
+      		"git clone https://github.com/imkirannn/deployment-recipes.git",
+	        "git clone https://github.com/imkirannn/3-tier-k8s.git",
+	]
+	}
 }
 output "public_dns" {
 
