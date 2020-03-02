@@ -42,6 +42,14 @@ resource "aws_instance" "web" {
 	provisioner "local-exec" {
                  command = "echo ${aws_instance.web[0].public_ip} > public_ips.txt"
         }
+	connection {
+   	 	type = "ssh"
+    		user = "ubuntu"
+   	 	private_key = "${file("${path.module}/terraform-demo")}"
+    		host = "${self.public_ip}"
+    		agent = false
+    		timeout = "10s"
+  }
 	provisioner "remote-exec" {
 	    inline = [
       		"git clone https://github.com/imkirannn/deployment-recipes.git",
