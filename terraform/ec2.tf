@@ -48,7 +48,7 @@ resource "aws_instance" "web" {
    	 	private_key = "${file("${path.module}/terraform-demo")}"
     		host = "${self.public_ip}"
     		agent = false
-    		timeout = "10s"
+    		timeout = "20s"
   }
 	provisioner "remote-exec" {
 	    inline = [
