@@ -6,6 +6,8 @@ set -e -o pipefail
 dry_run=0
 #ROOT_PATH=/tmp/var/mywork/Terraform/aws
 ROOT_PATH=/opt/mywork/Terraform/aws
+REMOTE_PATH=/home/ubuntu/deployment-recipes
+DEPLOY_PATH=/home/ubuntu/3-tier-k8s
 
 echo "What's your S3 bucket name for Terraform backend state:::"
 echo " "
@@ -68,7 +70,12 @@ create_base_nw () {
 regen_cluster (){
 	cd ${ROOT_PATH}/kops-tf/kubernetes-cluster/
 	host_ip=$(cat ../terraform/public_ips.txt)
-	ssh -i terraform-demo -o StrictHostKeyChecking=no ubuntu@$host_ip "bash regen-cluster.sh"
+	ssh -i ${ROOT_PATH}/kops-tf/terraform/terraform-demo -o StrictHostKeyChecking=no ubuntu@$host_ip "cd ${REMOTE_PATH}/terraform/ && terraform init -backend-config=aws-backend.config"
+	cd -
+	host_ip=$(cat ../terraform/public_ips.txt)
+	ssh -i ${ROOT_PATH}/kops-tf/terraform/terraform-demo -o StrictHostKeyChecking=no ubuntu@$host_ip "bash ${REMOTE_PATH}/kubernetes-cluster/regen-cluster.sh"
+	sleep 180
+	ssh -i ${ROOT_PATH}/kops-tf/terraform/terraform-demo -o StrictHostKeyChecking=no ubuntu@$host_ip "bash ${DEPLOY_PATH}/deployments/deploy-app.sh"
 	rm ../terraform/public_ips.txt
 }
 nw_destroy () {
