@@ -8,8 +8,8 @@ cd ${ROOT_PATH1}/kubernetes-cluster
 
 cd ../terraform 
 ls -lrta
-echo "waiting for backend initalisation...."
-sleep 240
+echo "waiting for backend initialisation...."
+#sleep 240
 terraform init -backend-config=aws-backend.config
 TF_OUTPUT=$(terraform output -json)
 cd -   

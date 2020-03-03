@@ -57,8 +57,4 @@ resource "aws_instance" "web" {
 	]
 	}
 }
-output "public_dns" {
 
-value = "${aws_instance.web[0].public_ip}"
-
-}
