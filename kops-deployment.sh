@@ -32,6 +32,11 @@ cd -
 
 #sed -i "s/\(kubernetes_cluster_name = \).*\$/\1${cluster_name}/" terraform/s3-backend/s3.tf 
 #sed -i "s/\(kubernetes_cluster_name = \).*\$/\1${cluster_name}/" terraform/main.tf
+
+sed -i  -re "s/^(bucket) = (.*)/\1 = \"${tf_bucket}\"/" terraform/aws-backend.config
+sed -i  -re "s/^(s3_bucket) = (.*)/\1 = \"${tf_bucket}\"/" terraform/env-config.tfvars
+sed -i  -re "s/^(kubernetes_cluster_name) = (.*)/\1 = \"${cluster_name}\"/" terraform/env-config.tfvars
+
 export KOPS_RUN_OBSOLETE_VERSION=true
 
 #if [ ! -d "$ROOT_PATH" ];then
@@ -41,8 +46,8 @@ export KOPS_RUN_OBSOLETE_VERSION=true
 
 create_s3_bucket () {
    cd ${ROOT_PATH}/kops-tf/terraform/s3-backend/
-   terraform init && terraform plan -var="kubernetes_cluster_name=$cluster_name" -var="s3_bucket=$tf_bucket" 
-   terraform apply -auto-approve 
+   terraform init && terraform plan --var-file="../env-config.tfvars" 
+   terraform apply -var-file="../env-config.tfvars" -auto-approve 
 }	
 
 check_s3_bucket (){
@@ -60,22 +65,29 @@ check_s3_bucket (){
 
 create_base_nw () {
    cd ${ROOT_PATH}/kops-tf/terraform/
-   terraform init -backend-config=aws-backend.config && terraform plan -var="kubernetes_cluster_name=$cluster_name" -var="s3_bucket=$tf_bucket"
+   terraform init -backend-config=aws-backend.config && terraform plan -var-file="env-config.tfvars"
    echo  "**************************************************************"
    echo  "Applying config to create VPC, SUBNETS, IGW, NAT ,Rtables"
    echo "**************************************************************"
-   terraform apply -auto-approve
+   terraform apply -var-file="env-config.tfvars" -auto-approve
 }
 
 regen_cluster (){
 	cd ${ROOT_PATH}/kops-tf/kubernetes-cluster/
 	host_ip=$(cat ../terraform/public_ips.txt)
+	scp -i ${ROOT_PATH}/kops-tf/terraform/terraform-demo -o StrictHostKeyChecking=no ${ROOT_PATH}/kops-tf/terraform/aws-backend.config ubuntu@$host_ip:${REMOTE_PATH}/terraform/
 	ssh -i ${ROOT_PATH}/kops-tf/terraform/terraform-demo -o StrictHostKeyChecking=no ubuntu@$host_ip "cd ${REMOTE_PATH}/terraform/ && terraform init -backend-config=aws-backend.config"
 	cd -
 	host_ip=$(cat ../terraform/public_ips.txt)
+	echo "*******************************************************"
+	echo "..................Creating Kops Cluster................"
 	ssh -i ${ROOT_PATH}/kops-tf/terraform/terraform-demo -o StrictHostKeyChecking=no ubuntu@$host_ip "bash ${REMOTE_PATH}/kubernetes-cluster/regen-cluster.sh"
+	echo "*******************************************************"
 	sleep 180
+	echo "*******************************************************"
+	echo "...................Deploying application..............."
 	ssh -i ${ROOT_PATH}/kops-tf/terraform/terraform-demo -o StrictHostKeyChecking=no ubuntu@$host_ip "bash ${DEPLOY_PATH}/deployments/deploy-app.sh"
+	echo "*******************************************************"
 	rm ../terraform/public_ips.txt
 }
 nw_destroy () {
@@ -87,7 +99,7 @@ nw_destroy () {
 		echo "**************************************************************"
         	echo  "Deleting VPC, SUBNETS, IGW, NAT ,Rtables etc................"
 		terraform init -backend-config=aws-backend.config
-    		terraform destroy -input=false -auto-approve
+    		terraform destroy --var-file="env-config.tfvars" -input=false -auto-approve
     		if [ "$?" -eq 0 ]; then
         	    UPDATE_SUCCESS=true
     		fi
@@ -101,7 +113,7 @@ nw_destroy () {
 	echo  "**************************************************************"
 	echo  "Deleting S3 bucket $S3_BUCKET................"
 	echo  "**************************************************************"
-	terraform destroy -input=false -auto-approve
+	terraform destroy --var-file="../env-config.tfvars" -input=false -auto-approve
         echo "Deleted S3 $S3_BUCKET successfully"
 }
 #function create_bastion () {
@@ -120,7 +132,7 @@ while getopts "ptbd" opt; do
 		;;
 	t) check_s3_bucket
 	   create_base_nw
-	    regen_cluster
+	   regen_cluster
 
 	  # create_bastion
 		;;
