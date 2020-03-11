@@ -5,7 +5,7 @@
 set -e -o pipefail
 dry_run=0
 #ROOT_PATH=/tmp/var/mywork/Terraform/aws
-ROOT_PATH=/opt/mywork/Terraform/aws
+ROOT_PATH=~/opt/mywork/Terraform/aws
 REMOTE_PATH=/home/ubuntu/deployment-recipes
 DEPLOY_PATH=/home/ubuntu/3-tier-k8s
 
